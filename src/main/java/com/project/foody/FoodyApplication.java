@@ -5,7 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing // 자동 업데이트 위해 넣음
+// test 커밋
 public class FoodyApplication {
 
 	public static void main(String[] args) {
