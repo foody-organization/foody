@@ -7,12 +7,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class BoardServiceImpl implements BoardService {
 
@@ -32,17 +34,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void update(Long id, BoardDto.Request boardDto) {
-
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found id: " + id));
 
-        Board updatedBoard = Board.builder()
-                .id(board.getId())
-                .title(boardDto.getTitle())
-                .content(boardDto.getContent())
-                .build();
-
-        boardRepository.save(updatedBoard);
+        board.update(boardDto.getTitle(), boardDto.getContent());
     }
 
     @Override
