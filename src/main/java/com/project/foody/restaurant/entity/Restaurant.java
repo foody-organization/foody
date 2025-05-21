@@ -38,19 +38,12 @@ public class Restaurant extends BaseEntity {
     private String description; // 음식점 소개
 
 
-
+    // 다대일 null값이 허용되는것고 아닌것을 확인
     // 편의시설 목록 - Facility와의 일대다 관계 (양방향 연관관계)
     // 원하는 편의시설을 검색해서 식당을 찾을 수 있게 하기 위해 양방향을 구현함
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Facility> facilities = new ArrayList<>();
 
-    // 양방향 관계 유지를 위한 편의 메서드
-    public void addFacility(Facility facility) {
-        if (!facilities.contains(facility)) { // 이미 포함된 객체가 추가 되지 않게 하기 위해서
-            facilities.add(facility);
-            facility.setRestaurant(this);
-        }
-    }
 
     // 음식점 분류
 
@@ -66,19 +59,11 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantImage> images = new ArrayList<>();
 
-    public void addImage(RestaurantImage image) {
-        images.add(image);
-        image.setRestaurant(this);
-    }
 
     // 음식점 메뉴들
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantMenu> menus = new ArrayList<>();
 
-    public void addMenu(RestaurantMenu menu) {
-        menus.add(menu);
-        menu.setRestaurant(this);
-    }
 
 
 

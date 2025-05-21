@@ -39,20 +39,8 @@ public class RestaurantImage {
     private String imageUrl; // 이미지 파일 경로나 URL
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false) // 외래키는 반드시 존재해야 함
+    @JoinColumn(name = "restaurant_id", nullable = false) // 음식점과 반드시 연관돼야 하며, 단독으로 존재할 수 없으므로 nullable = false 설정
     private Restaurant restaurant;
 
-    /**
-     * 연관된 음식점 설정 (양방향 관계 유지용)
-     */
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
 
-    /**
-     * 이미지 URL 변경을 위한 메서드
-     */
-    public void changeImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }

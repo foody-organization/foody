@@ -9,11 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.AccessLevel;
+import lombok.*;
 
 /**
  * 음식점의 편의시설 정보를 저장하는 엔티티입니다.
@@ -22,6 +18,8 @@ import lombok.AccessLevel;
  */
 @Entity
 @Getter
+@AllArgsConstructor // 👈 builder를 쓸 때 같이 필요
+@Builder             // ✅ builder 메서드 생성
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 프록시 생성을 위한 생성자
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "restaurant") // 무한 순환 방지를 위해 restaurant 제외
@@ -36,13 +34,7 @@ public class Facility {
     private String name; // 편의시설 이름 (예: "주차장", "와이파이")
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false) // 외래키는 필수
+    @JoinColumn(name = "restaurant_id", nullable = false) // 음식점과 반드시 연관되어야 하며, 단독으로 존재할 수 없기 때문에 nullable = false 설정
     private Restaurant restaurant;
 
-    /**
-     * 연관된 음식점 설정 (양방향 연관관계 유지용)
-     */
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
 }

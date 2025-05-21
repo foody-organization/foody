@@ -46,22 +46,7 @@ public class RestaurantMenu {
     private String description; // 메뉴 설명 (선택 사항)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false) // 외래키는 필수
+    @JoinColumn(name = "restaurant_id", nullable = false) // 음식점과 반드시 연관돼야 하며, 단독으로 존재할 수 없으므로 nullable = false 설정
     private Restaurant restaurant;
 
-    /**
-     * 연관된 음식점 설정 (양방향 연관관계 유지를 위한 메서드)
-     */
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    /**
-     * 메뉴 정보 변경 메서드
-     */
-    public void changeMenu(String name, int price, String description) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-    }
 }

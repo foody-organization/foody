@@ -29,6 +29,8 @@ public interface RestaurantDto {
         private String address;      // 음식점 주소
         private String description;  // 음식점 소개 문구
 
+
+        // 이부분도 다시 생각 해보기
         // 연관된 하위 정보들
         private List<FacilityDto.Request> facilities;          // 편의시설 목록
         private List<RestaurantImageDto.Request> images;       // 이미지 목록
