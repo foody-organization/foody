@@ -1,5 +1,7 @@
 package com.project.foody.restaurant.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,6 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter // 모든 필드에 대해 getter 자동생성
@@ -26,10 +31,55 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name; // 음식점 이름
 
-    @Column(length = 200)
+    @Column(nullable = false, length = 200)
     private String address; // 음식점 주소
 
-    @Column(length = 1000)
-    private String description; // 음식점 소개개
+    @Column(nullable = false, length = 1000)
+    private String description; // 음식점 소개
+
+
+
+    // 편의시설 목록 - Facility와의 일대다 관계 (양방향 연관관계)
+    // 원하는 편의시설을 검색해서 식당을 찾을 수 있게 하기 위해 양방향을 구현함
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Facility> facilities = new ArrayList<>();
+
+    // 양방향 관계 유지를 위한 편의 메서드
+    public void addFacility(Facility facility) {
+        if (!facilities.contains(facility)) { // 이미 포함된 객체가 추가 되지 않게 하기 위해서
+            facilities.add(facility);
+            facility.setRestaurant(this);
+        }
+    }
+
+    // 음식점 분류
+
+    // 영업시간
+
+    // (리뷰, 별점리뷰)
+
+    // 태그
+
+    // 위치정보(네이버에서 받을 수 있나?
+
+    // 음식점 사진들
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestaurantImage> images = new ArrayList<>();
+
+    public void addImage(RestaurantImage image) {
+        images.add(image);
+        image.setRestaurant(this);
+    }
+
+    // 음식점 메뉴들
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestaurantMenu> menus = new ArrayList<>();
+
+    public void addMenu(RestaurantMenu menu) {
+        menus.add(menu);
+        menu.setRestaurant(this);
+    }
+
+
 
 }
