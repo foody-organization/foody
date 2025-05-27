@@ -1,5 +1,6 @@
 package com.project.foody.restaurant.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.foody.base.dto.BaseResponseDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public interface FacilityDto {
      */
     @Getter
     @SuperBuilder
+    @JsonInclude(JsonInclude.Include.NON_NULL) // 👈 null 값 필드 제외
     @NoArgsConstructor // JSON → 객체 변환(Jackson 역직렬화)을 위해 기본 생성자 필요
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     class Response extends BaseResponseDto {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/restaurant-menus")
+@RequestMapping("/restaurant-menus")
 public class RestaurantMenuController {
 
     private final RestaurantMenuService restaurantMenuService;

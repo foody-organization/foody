@@ -37,4 +37,9 @@ public class Facility {
     @JoinColumn(name = "restaurant_id", nullable = false) // 음식점과 반드시 연관되어야 하며, 단독으로 존재할 수 없기 때문에 nullable = false 설정
     private Restaurant restaurant;
 
+    // ✅ 연관관계 설정용 메서드 추가
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
 }
