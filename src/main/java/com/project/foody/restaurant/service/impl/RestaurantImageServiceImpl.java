@@ -9,13 +9,17 @@ import com.project.foody.restaurant.repository.RestaurantImageRepository;
 import com.project.foody.restaurant.repository.RestaurantRepository;
 import com.project.foody.restaurant.service.RestaurantImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class RestaurantImageServiceImpl implements RestaurantImageService {
 
     private final RestaurantImageRepository repository;

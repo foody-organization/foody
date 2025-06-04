@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@SQLRestriction("deleted = false")
 @SQLDelete(sql = "update restaurantImage set deleted = true where id = ?")
 public class RestaurantImage extends BaseEntity {
 
