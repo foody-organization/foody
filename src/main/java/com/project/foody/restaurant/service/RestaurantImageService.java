@@ -12,18 +12,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RestaurantImageService {
 
-    private final RestaurantRepository restaurantRepository;
-    private final com.project.foody.repository.RestaurantImageRepository restaurantImageRepository;
 
-    public Long uploadImage(Long restaurantId, RestaurantImageDto.Request dto) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
 
-        RestaurantImage image = RestaurantImage.builder()
-                .imageUrl(dto.getImageUrl())
-                .restaurant(restaurant)
-                .build();
-
-        return restaurantImageRepository.save(image).getId();
-    }
 }

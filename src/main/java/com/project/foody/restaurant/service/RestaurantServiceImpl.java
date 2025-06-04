@@ -1,33 +1,39 @@
 package com.project.foody.restaurant.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.project.foody.restaurant.dto.FacilityDto;
+import com.project.foody.restaurant.dto.RestaurantDto;
 import com.project.foody.restaurant.dto.RestaurantImageDto;
 import com.project.foody.restaurant.dto.RestaurantMenuDto;
 import com.project.foody.restaurant.entity.Facility;
+import com.project.foody.restaurant.entity.Restaurant;
+import com.project.foody.restaurant.entity.RestaurantFacility;
 import com.project.foody.restaurant.entity.RestaurantImage;
 import com.project.foody.restaurant.entity.RestaurantMenu;
-import org.springframework.stereotype.Service;
-
-import com.project.foody.restaurant.dto.RestaurantDto;
-import com.project.foody.restaurant.entity.Restaurant;
+import com.project.foody.restaurant.repository.FacilityRepository;
+import com.project.foody.restaurant.repository.RestaurantFacilityRepository;
 import com.project.foody.restaurant.repository.RestaurantRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
-
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final FacilityRepository facilityRepository;
+    private final RestaurantFacilityRepository restaurantFacilityRepository;
 
-    // 음식점 등록
     @Override
     public Long create(RestaurantDto.Request dto) {
         Restaurant restaurant = Restaurant.builder()
@@ -35,18 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .address(dto.getAddress())
                 .description(dto.getDescription())
                 .build();
-        // ✅ Facility 추가
-        if (dto.getFacilities() != null) {
-            for (FacilityDto.Request f : dto.getFacilities()) {
-                Facility facility = Facility.builder()
-                        .name(f.getName())
-                        .restaurant(restaurant) // 연관관계 설정
-                        .build();
-                restaurant.addFacility(facility); // 양방향 유지
-            }
-        }
 
-        // ✅ Image 추가
         if (dto.getImages() != null) {
             for (RestaurantImageDto.Request i : dto.getImages()) {
                 RestaurantImage image = RestaurantImage.builder()
@@ -57,7 +52,6 @@ public class RestaurantServiceImpl implements RestaurantService {
             }
         }
 
-        // ✅ Menu 추가
         if (dto.getMenus() != null) {
             for (RestaurantMenuDto.Request m : dto.getMenus()) {
                 RestaurantMenu menu = RestaurantMenu.builder()
@@ -69,30 +63,47 @@ public class RestaurantServiceImpl implements RestaurantService {
                 restaurant.addMenu(menu);
             }
         }
+
         return restaurantRepository.save(restaurant).getId();
     }
 
-    // 음식점 수정
     @Override
     public void update(Long id, RestaurantDto.Request dto) {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with id: " + id));
 
-        Restaurant updated = Restaurant.builder()
+        restaurant = Restaurant.builder()
                 .id(restaurant.getId())
                 .name(dto.getName())
                 .address(dto.getAddress())
                 .description(dto.getDescription())
                 .build();
 
-        restaurantRepository.save(updated);
+        restaurantRepository.save(restaurant);
     }
 
-    // 음식점 단건 조회
     @Override
+    @Transactional(readOnly = true)
     public RestaurantDto.Response findById(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id)
+        Restaurant restaurant = restaurantRepository.findByIdWithAll(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with id: " + id));
+
+        log.info("\u2705 restaurant: {}", restaurant);
+        log.info("\u2705 facilities: {}", restaurant.getRestaurantFacilities());
+        log.info("\u2705 images: {}", restaurant.getImages());
+        log.info("\u2705 menus: {}", restaurant.getMenus());
+
+        List<FacilityDto.Response> facilities = new ArrayList<>();
+        if (restaurant.getRestaurantFacilities() != null) {
+            facilities = restaurant.getRestaurantFacilities().stream()
+                    .map(RestaurantFacility::getFacility)
+                    .filter(Objects::nonNull)
+                    .map(f -> FacilityDto.Response.builder()
+                            .id(f.getId())
+                            .name(f.getName())
+                            .build())
+                    .collect(Collectors.toList());
+        }
 
         return RestaurantDto.Response.builder()
                 .id(restaurant.getId())
@@ -101,18 +112,16 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .description(restaurant.getDescription())
                 .createDate(restaurant.getCreateDate())
                 .updateDate(restaurant.getUpdateDate())
-
-                // ✅ 연관된 항목들 매핑
-                .facilities(restaurant.getFacilities().stream()
-                        .map(f -> FacilityDto.Response.builder().name(f.getName()).build())
-                        .collect(Collectors.toList()))
-
+                .facilities(facilities)
                 .images(restaurant.getImages().stream()
-                        .map(i -> RestaurantImageDto.Response.builder().imageUrl(i.getImageUrl()).build())
+                        .map(i -> RestaurantImageDto.Response.builder()
+                                .id(i.getId())
+                                .imageUrl(i.getImageUrl())
+                                .build())
                         .collect(Collectors.toList()))
-
                 .menus(restaurant.getMenus().stream()
                         .map(m -> RestaurantMenuDto.Response.builder()
+                                .id(m.getId())
                                 .name(m.getName())
                                 .price(m.getPrice())
                                 .description(m.getDescription())
@@ -121,28 +130,57 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .build();
     }
 
-    // 음식점 삭제
     @Override
     public void delete(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant not found with id: " + id));
-
         restaurantRepository.delete(restaurant);
     }
 
-    // 음식점 전체 조회
     @Override
+    @Transactional(readOnly = true)
     public List<RestaurantDto.Response> findAll() {
-        return restaurantRepository.findAll().stream()
-                .map(r -> RestaurantDto.Response.builder()
-                        .id(r.getId())
-                        .name(r.getName())
-                        .address(r.getAddress())
-                        .description(r.getDescription())
-                        .createDate(r.getCreateDate())
-                        .updateDate(r.getUpdateDate())
-                        .build())
-                .collect(Collectors.toList());
+        List<Restaurant> restaurants = restaurantRepository.findAllWithAll(); // fetch join 포함된 쿼리
+        return restaurants.stream().map(restaurant -> RestaurantDto.Response.builder()
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .address(restaurant.getAddress())
+                .description(restaurant.getDescription())
+                .createDate(restaurant.getCreateDate())
+                .updateDate(restaurant.getUpdateDate())
+                .facilities(restaurant.getRestaurantFacilities().stream()
+                        .map(rf -> FacilityDto.Response.builder()
+                                .id(rf.getFacility().getId())
+                                .name(rf.getFacility().getName())
+                                .build())
+                        .collect(Collectors.toList()))
+                .images(restaurant.getImages().stream()
+                        .map(i -> RestaurantImageDto.Response.builder()
+                                .id(i.getId())
+                                .imageUrl(i.getImageUrl())
+                                .build())
+                        .collect(Collectors.toList()))
+                .menus(restaurant.getMenus().stream()
+                        .map(m -> RestaurantMenuDto.Response.builder()
+                                .id(m.getId())
+                                .name(m.getName())
+                                .price(m.getPrice())
+                                .description(m.getDescription())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build()
+        ).collect(Collectors.toList());
     }
 
+    @Override
+    public void addFacilityToRestaurant(Long restaurantId, Long facilityId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
+
+        Facility facility = facilityRepository.findById(facilityId)
+                .orElseThrow(() -> new EntityNotFoundException("Facility not found"));
+
+        // ✅ 양방향 연관관계 유지
+        restaurant.addFacility(facility);
+    }
 }

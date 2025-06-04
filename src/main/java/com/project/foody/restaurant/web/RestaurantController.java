@@ -1,23 +1,14 @@
 package com.project.foody.restaurant.web;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.project.foody.base.controller.CrudController;
 import com.project.foody.restaurant.dto.RestaurantDto;
 import com.project.foody.restaurant.service.RestaurantService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,38 +19,47 @@ public class RestaurantController implements CrudController<RestaurantDto.Reques
     private final RestaurantService restaurantService;
 
     // 음식점 등록
-    @Override
     @PostMapping
+    @Override
     public ResponseEntity<Long> create(@RequestBody RestaurantDto.Request dto) {
-        return ResponseEntity.ok(restaurantService.create(dto));
+        Long id = restaurantService.create(dto);
+        return ResponseEntity.ok(id);
     }
 
     // 음식점 단건 조회
-    @Override
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDto.Response> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(restaurantService.findById(id));
+    @Override
+    public ResponseEntity<RestaurantDto.Response> findById(@PathVariable("id") Long id) {
+        RestaurantDto.Response response = restaurantService.findById(id);
+        return ResponseEntity.ok(response);
     }
 
     // 음식점 수정
-    @Override
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody RestaurantDto.Request dto) {
+    @Override
+    public void update(@PathVariable("id") Long id, @RequestBody RestaurantDto.Request dto) {
         restaurantService.update(id, dto);
     }
 
     // 음식점 삭제
-    @Override
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    @Override
+    public void delete(@PathVariable("id") Long id) {
         restaurantService.delete(id);
     }
 
     // 음식점 전체 조회
-    @Override
     @GetMapping
+    @Override
     public ResponseEntity<List<RestaurantDto.Response>> findAll() {
-        return ResponseEntity.ok(restaurantService.findAll());
+        List<RestaurantDto.Response> list = restaurantService.findAll();
+        return ResponseEntity.ok(list);
     }
 
+    // 음식점 편의시설추가
+    @PostMapping("/{restaurantId}/facility/{facilityId}")
+    public ResponseEntity<Void> addFacility(@PathVariable Long restaurantId, @PathVariable Long facilityId) {
+        restaurantService.addFacilityToRestaurant(restaurantId, facilityId);
+        return ResponseEntity.ok().build();
+    }
 }

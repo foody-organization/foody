@@ -8,59 +8,80 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * 음식점 정보를 나타내는 엔티티입니다.
- * 편의시설, 이미지, 메뉴와 연관관계를 맺습니다.
- */
 @Entity
 @Getter
 @SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 프록시용 기본 생성자
-@AllArgsConstructor // 전체 필드 생성자
-@DynamicInsert // null 제외한 값만 insert
-@DynamicUpdate // 변경된 필드만 update
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class Restaurant extends BaseEntity {
 
     @Column(nullable = false, length = 100)
-    private String name; // 음식점 이름
+    private String name;
 
     @Column(nullable = false, length = 200)
-    private String address; // 음식점 주소
+    private String address;
 
     @Column(nullable = false, length = 1000)
-    private String description; // 음식점 설명
+    private String description;
 
-    // Facility - 편의시설 리스트 (양방향)
-    @Builder.Default
+    // 다대다 편의시설 연결
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Facility> facilities = new ArrayList<>();
+    private Set<RestaurantFacility> restaurantFacilities = new HashSet<>();
 
     public void addFacility(Facility facility) {
-        this.facilities.add(facility);
-        facility.setRestaurant(this); // 양방향 연관관계 설정
+        RestaurantFacility rf = RestaurantFacility.builder()
+                .restaurant(this)
+                .facility(facility)
+                .build();
+        this.restaurantFacilities.add(rf);
+        facility.getRestaurantFacilities().add(rf);
     }
 
-    // RestaurantImage - 음식점 이미지 리스트 (양방향)
+    // 💡 카테고리, 영업시간, 태그 등은 추후 확장 가능
+
+    public List<Facility> getFacilities() {
+        return restaurantFacilities.stream()
+                .map(RestaurantFacility::getFacility)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "restaurant_facility",
+//            joinColumns = @JoinColumn(name = "restaurant_id"),
+//            inverseJoinColumns = @JoinColumn(name = "facility_id")
+//    )
+//    private List<Facility> facilities = new ArrayList<>();
+
+    // ✅ 음식점 이미지 - 일대다 양방향
     @Builder.Default
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantImage> images = new ArrayList<>();
+    private Set<RestaurantImage> images = new HashSet<>();
 
     public void addImage(RestaurantImage image) {
         this.images.add(image);
         image.setRestaurant(this);
     }
 
-    // RestaurantMenu - 음식점 메뉴 리스트 (양방향)
+    // ✅ 음식점 메뉴 - 일대다 양방향
     @Builder.Default
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantMenu> menus = new ArrayList<>();
+    private Set<RestaurantMenu> menus = new HashSet<>();
 
     public void addMenu(RestaurantMenu menu) {
         this.menus.add(menu);
         menu.setRestaurant(this);
     }
 
-    // ✅ 나중에 카테고리, 영업시간, 태그 등 추가 가능
+    // 💡 카테고리, 영업시간, 태그 등은 추후 확장 가능
 }

@@ -1,55 +1,53 @@
 package com.project.foody.restaurant.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.project.foody.base.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.AccessLevel;
+import java.time.LocalDateTime;
 
-/**
- * 음식점의 개별 메뉴 정보를 담는 엔티티입니다.
- * 메뉴 이름, 가격, 설명을 포함하며,
- * 하나의 음식점(Restaurant)과 N:1 관계를 가집니다.
- */
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 프록시 생성을 위한 기본 생성자
-@AllArgsConstructor // 모든 필드 값을 인자로 받는 생성자
-@Builder // 객체 생성 시 유연한 빌더 패턴 지원
-@EqualsAndHashCode(onlyExplicitlyIncluded = true) // ID 기준으로 equals/hashCode 정의
-@ToString(exclude = "restaurant") // restaurant 필드는 toString에서 제외 (무한루프 방지)
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
+@SQLDelete(sql = "update restaurant_menu set deleted = true where id = ?")
+@ToString(exclude = "restaurant")
 public class RestaurantMenu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include // equals/hashCode 기준 필드
     private Long id;
 
-    @Column(nullable = false)
-    private String name; // 메뉴 이름
 
     @Column(nullable = false)
-    private int price; // 메뉴 가격
+    private String name;
 
-    @Column(length = 1000) // nullable=true는 기본값이므로 생략
-    private String description; // 메뉴 설명 (선택 사항)
+    @Column(nullable = false)
+    private int price;
+
+    @Column(length = 1000)
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false) // 음식점과 반드시 연관돼야 하며, 단독으로 존재할 수 없으므로 nullable = false 설정
+    @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    // ✅ 연관관계 설정용 메서드 추가
+    /**
+     * 메뉴 정보 수정
+     */
+    public void update(String name, int price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
