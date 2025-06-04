@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "update facility set deleted = true where id = ?")
-@ToString(exclude = "restaurants")
 public class Facility {
 
     @Id
