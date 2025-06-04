@@ -22,13 +22,16 @@ import org.hibernate.annotations.SQLDelete;
 @SQLDelete(sql = "update restaurantImage set deleted = true where id = ?")
 public class RestaurantImage extends BaseEntity {
 
+    @Column(nullable = false)
     private String imageUrl;
 
+    @Column(nullable = false)
     private boolean isThumbnail;
 
     @Column(nullable = false)
     private int orderIndex;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ImageType type;
 

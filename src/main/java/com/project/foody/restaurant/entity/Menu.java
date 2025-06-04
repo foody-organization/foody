@@ -24,7 +24,10 @@ import java.util.List;
 @SQLDelete(sql = "update menu set deleted = true where id = ?")
 public class Menu extends BaseEntity {
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -24,7 +24,10 @@ import java.util.List;
 @SQLDelete(sql = "update restaurant set deleted = true where id = ?")
 public class Restaurant extends BaseEntity {
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String address;
 
     @ManyToMany

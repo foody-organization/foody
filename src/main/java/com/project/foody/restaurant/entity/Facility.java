@@ -1,6 +1,7 @@
 package com.project.foody.restaurant.entity;
 
 import com.project.foody.base.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.AccessLevel;
@@ -24,6 +25,8 @@ import java.util.List;
 @DynamicUpdate
 @SQLDelete(sql = "update facility set deleted = true where id = ?")
 public class Facility extends BaseEntity {
+
+    @Column(nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "facilities")
