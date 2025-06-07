@@ -9,6 +9,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +21,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @SQLDelete(sql = "update restaurant_menu set deleted = true where id = ?")
 @ToString(exclude = "restaurant")
-public class RestaurantMenu {
+public class RestaurantMenu extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +40,10 @@ public class RestaurantMenu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestaurantImage> images = new ArrayList<>();
+
 
     /**
      * 메뉴 정보 수정

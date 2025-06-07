@@ -53,6 +53,8 @@ public class FacilityServiceImpl implements FacilityService {
         return FacilityDto.Response.builder()
                 .id(facility.getId())
                 .name(facility.getName())
+                .createDate(facility.getCreateDate())
+                .updateDate(facility.getUpdateDate())
                 .build();
     }
 
@@ -63,6 +65,8 @@ public class FacilityServiceImpl implements FacilityService {
                 .map(f -> FacilityDto.Response.builder()
                         .id(f.getId())
                         .name(f.getName())
+                        .createDate(f.getCreateDate())
+                        .updateDate(f.getUpdateDate())
                         .build())
                 .collect(Collectors.toList());
     }

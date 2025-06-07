@@ -1,14 +1,13 @@
 package com.project.foody.restaurant.entity;
 
 import com.project.foody.base.entity.BaseEntity;
+import com.project.foody.restaurant.enums.ImageType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,31 +18,41 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @SQLDelete(sql = "update restaurant_image set deleted = true where id = ?")
 @ToString(exclude = "restaurant")
-public class RestaurantImage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class RestaurantImage extends BaseEntity {
 
     @Column(nullable = false)
     private String imageUrl;
 
+    private boolean isThumbnail;
+
+    @Column(nullable = false)
+    private int orderIndex;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ImageType type;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    /**
-     * 이미지 URL 변경
-     */
-    public void update(String imageUrl) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id")
+    private RestaurantMenu menu;
+
+    public void update(String imageUrl, boolean isThumbnail, int orderIndex, ImageType type) {
         this.imageUrl = imageUrl;
+        this.isThumbnail = isThumbnail;
+        this.orderIndex = orderIndex;
+        this.type = type;
     }
 
-    /**
-     * 연관된 음식점 설정 (양방향 관계 설정 시 사용)
-     */
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
+
+    public void setMenu(RestaurantMenu menu) {
+        this.menu = menu;
+    }
+
 }

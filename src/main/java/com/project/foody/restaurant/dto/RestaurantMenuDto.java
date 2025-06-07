@@ -15,6 +15,7 @@ public interface RestaurantMenuDto {
         private String name;        // 메뉴 이름
         private int price;          // 메뉴 가격
         private String description; // 메뉴 설명 (선택)
+        private Long restaurantId;
     }
 
     @NoArgsConstructor
@@ -26,5 +27,6 @@ public interface RestaurantMenuDto {
         private String name;        // 메뉴 이름
         private int price;          // 메뉴 가격
         private String description; // 메뉴 설명
+        private Long restaurantId;
     }
 }

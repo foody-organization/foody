@@ -9,11 +9,7 @@ import com.project.foody.restaurant.dto.FacilityDto;
 import com.project.foody.restaurant.dto.RestaurantDto;
 import com.project.foody.restaurant.dto.RestaurantImageDto;
 import com.project.foody.restaurant.dto.RestaurantMenuDto;
-import com.project.foody.restaurant.entity.Facility;
-import com.project.foody.restaurant.entity.Restaurant;
-import com.project.foody.restaurant.entity.RestaurantFacility;
-import com.project.foody.restaurant.entity.RestaurantImage;
-import com.project.foody.restaurant.entity.RestaurantMenu;
+import com.project.foody.restaurant.entity.*;
 import com.project.foody.restaurant.repository.FacilityRepository;
 import com.project.foody.restaurant.repository.RestaurantFacilityRepository;
 import com.project.foody.restaurant.repository.RestaurantRepository;
@@ -152,6 +148,8 @@ public class RestaurantServiceImpl implements RestaurantService {
                         .map(rf -> FacilityDto.Response.builder()
                                 .id(rf.getFacility().getId())
                                 .name(rf.getFacility().getName())
+                                .createDate(rf.getFacility().getCreateDate())   // ✅ 추가
+                                .updateDate(rf.getFacility().getUpdateDate())   // ✅ 추가
                                 .build())
                         .collect(Collectors.toList()))
                 .images(restaurant.getImages().stream()
@@ -171,6 +169,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .build()
         ).collect(Collectors.toList());
     }
+
 
     @Override
     public void addFacilityToRestaurant(Long restaurantId, Long facilityId) {

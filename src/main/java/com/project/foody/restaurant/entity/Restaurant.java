@@ -35,6 +35,7 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RestaurantFacility> restaurantFacilities = new HashSet<>();
 
+
     public void addFacility(Facility facility) {
         RestaurantFacility rf = RestaurantFacility.builder()
                 .restaurant(this)
@@ -51,8 +52,6 @@ public class Restaurant extends BaseEntity {
                 .map(RestaurantFacility::getFacility)
                 .collect(Collectors.toList());
     }
-
-
 
 
 //    @ManyToMany

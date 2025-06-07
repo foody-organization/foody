@@ -29,7 +29,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findAllWithAll();
 
 
-    // ✅ EntityGraph 방식 사용
+    // EntityGraph 방식 사용
     @EntityGraph(attributePaths = {"restaurantFacilities.facility", "images", "menus"})
     Optional<Restaurant> findById(Long id);
 }
