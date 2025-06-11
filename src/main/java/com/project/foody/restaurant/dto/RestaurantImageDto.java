@@ -17,8 +17,8 @@ public interface RestaurantImageDto {
         private boolean isThumbnail;
         private int orderIndex;
         private ImageType type;
-        private Long restaurantId;   // 연관된 음식점 ID
-        private Long menuId;         // 연관된 메뉴 ID
+        private Long restaurantId;
+        private Long menuId;
     }
 
     @Getter
@@ -32,7 +32,10 @@ public interface RestaurantImageDto {
         private boolean isThumbnail;
         private int orderIndex;
         private ImageType type;
-        private Long restaurantId;   // 음식점 ID
-        private Long menuId;         // 메뉴 ID
+
+        // 여기에 없으면 서비스단에서 없는 메서드로 오류가 생김
+        private Long restaurantId;
+        private Long menuId;
+
     }
 }

@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
@@ -16,6 +17,7 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@SQLRestriction("deleted = false")
 @SQLDelete(sql = "update restaurant_image set deleted = true where id = ?")
 @ToString(exclude = "restaurant")
 public class RestaurantImage extends BaseEntity {
@@ -47,6 +49,8 @@ public class RestaurantImage extends BaseEntity {
         this.type = type;
     }
 
+    // 이건 필요없음 다시 생각하기
+    // 이미지에서 레스토랑을 바꾸지않으니
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }

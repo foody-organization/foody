@@ -29,7 +29,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findAllWithAll();
 
 
-    // EntityGraph 방식 사용
+    // EntityGraph 방식 사용 다대다관계에서 레포지토리로 가지고 오는것 (이걸 왜썼는지 알아오기)
     @EntityGraph(attributePaths = {"restaurantFacilities.facility", "images", "menus"})
-    Optional<Restaurant> findById(Long id);
+    Optional<Restaurant> findById(Long id); // optional 쓰는이유알아오기 null값처리방법 중요!!!!!
 }

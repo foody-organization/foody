@@ -9,6 +9,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,14 +25,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "update facility set deleted = true where id = ?")
 public class Facility extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String name;
-
-    @Column(nullable = false)
-    private boolean deleted = false;
-
 
     // 중간 엔티티(RestaurantFacility)를 통한 연관관계
     @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -45,11 +45,6 @@ public class Facility extends BaseEntity {
         this.restaurantFacilities.add(rf);
         rf.setFacility(this);
     }
-    //    public List<Restaurant> getRestaurants() {
-//        return restaurantFacilities.stream()
-//                .map(RestaurantFacility::getRestaurant)
-//                .collect(Collectors.toList());
-//    }
 
 }
 
