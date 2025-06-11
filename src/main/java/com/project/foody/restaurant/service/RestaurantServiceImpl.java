@@ -152,9 +152,10 @@ public class RestaurantServiceImpl implements RestaurantService {
                                 .updateDate(rf.getFacility().getUpdateDate())   // ✅ 추가
                                 .build())
                         .collect(Collectors.toList()))
-                .images(restaurant.getImages().stream()
+                .images(restaurant.getImages().stream()     // 이미지
                         .map(i -> RestaurantImageDto.Response.builder()
                                 .id(i.getId())
+                                .type(i.getType())
                                 .imageUrl(i.getImageUrl())
                                 .build())
                         .collect(Collectors.toList()))

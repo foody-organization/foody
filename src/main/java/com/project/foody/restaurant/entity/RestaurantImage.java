@@ -23,9 +23,9 @@ public class RestaurantImage extends BaseEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    private boolean isThumbnail;
+    private boolean isThumbnail;    // 썸네일 여부
 
-    @Column(nullable = false)
+    @Column(nullable = false)   // 사진 순서
     private int orderIndex;
 
     @Enumerated(EnumType.STRING)
