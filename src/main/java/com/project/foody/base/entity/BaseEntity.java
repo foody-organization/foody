@@ -32,4 +32,5 @@ public abstract class BaseEntity {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updateDate;
+
 }
