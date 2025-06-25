@@ -28,15 +28,15 @@ public class User extends BaseEntity {
 //    private String username; // 로그인 ID 또는 식별용 사용자명
 
     @Email(message = "올바른 이메일 형식이어야 합니다.")
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
-    @Column(nullable = false, unique = true, length = 100)
+    @NotBlank(message = "이메일은 필수 입력값입니다.") // 리턴메시지
+    @Column(nullable = false, unique = true, length = 30)
     private String email; // 이메일 로그인시 사용
 
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @Column(nullable = false)
     private String password; // 비밀번호 (BCrypt 등으로 암호화 저장)
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 10)
     private String name; // 사용자 이름
 
     @Column(length = 20)
