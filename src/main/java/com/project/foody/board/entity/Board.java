@@ -29,10 +29,6 @@ public class Board extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String content;
 
-    //회원 회원테이블 컬럼명 바뀌면 수정예정
-    @Column(nullable = false, length = 1000)
-    private String mem;
-
 
     public void update(String title, String content) {
         this.title = title;

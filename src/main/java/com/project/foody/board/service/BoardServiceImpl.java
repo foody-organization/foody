@@ -27,7 +27,6 @@ public class BoardServiceImpl implements BoardService {
         Board board = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
-                .mem(boardDto.getMem())
                 .build();
 
         return boardRepository.save(board).getId();
@@ -50,7 +49,6 @@ public class BoardServiceImpl implements BoardService {
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .mem(board.getMem())
                 .createDate(board.getCreateDate())
                 .updateDate(board.getUpdateDate())
                 .build();
@@ -71,7 +69,6 @@ public class BoardServiceImpl implements BoardService {
                         .id(board.getId())
                         .title(board.getTitle())
                         .content(board.getContent())
-                        .mem(board.getMem())
                         .createDate(board.getCreateDate())
                         .updateDate(board.getUpdateDate())
                         .build())

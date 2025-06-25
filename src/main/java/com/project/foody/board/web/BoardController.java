@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController implements CrudController<BoardDto.Request, BoardDto.Response, Long> {
 
