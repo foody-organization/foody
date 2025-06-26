@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.ZonedDateTime;
 
@@ -21,6 +22,7 @@ import java.time.ZonedDateTime;
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "update board set deleted = true where id = ?")
+@Where(clause = "deleted = false")
 public class Board extends BaseEntity {
 
     @Column(nullable = false, length = 200)
