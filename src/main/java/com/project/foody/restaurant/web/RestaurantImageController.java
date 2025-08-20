@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/restaurant-image")
+@RequestMapping("/restaurant/restaurant-image")
 @RequiredArgsConstructor
 public class RestaurantImageController implements CrudController<RestaurantImageDto.Request, RestaurantImageDto.Response, Long> {
 

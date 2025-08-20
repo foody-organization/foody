@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/facilities")
+@RequestMapping("/restaurant/facilities")
 public class FacilityController implements CrudController<FacilityDto.Request, FacilityDto.Response, Long> {
 
     private final FacilityService facilityService;

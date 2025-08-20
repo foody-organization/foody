@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/restaurant/menu")
 @RequiredArgsConstructor
 public class RestaurantMenuController implements CrudController<RestaurantMenuDto.Request, RestaurantMenuDto.Response, Long> {
 
