@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // 김나연이 추가
+	implementation 'org.hibernate.common:hibernate-commons-annotations:6.0.6.Final' // 👈 이 줄 추가!
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -35,10 +36,19 @@ dependencies {
 
 	// MySQL
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'  // ⬅️ 이거 추가
+	testImplementation 'org.springframework.security:spring-security-test'  // 선택
+
+
 }
 
 tasks.named('test') {
